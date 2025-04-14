@@ -9,9 +9,12 @@ public class MyController : Controller
         return Accepted();
     }
 
-    public async void BackgroundOperationAsync()
+    public async Task BackgroundOperationAsync()
     {
         var result = await CallDependencyAsync();
         DoSomething(result);
     }
+
+    //Ошибка в использовании async void.
+    //Также можно добавить обработку ошибок, но будто бы по примеру нет необходимости обрабатывать ошибки.
 }

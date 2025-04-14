@@ -6,12 +6,11 @@ public class SomeClass
     {
         var tcs = new TaskCompletionSource<int>();
 
-        var operation = new LegacyAsyncOperation();
-        operation.Completed += result =>
-        {
-            tcs.SetResult(result);
-        };
+        Task<int> operation = new LegacyAsyncOperation();
 
-        return tcs.Task;
+        operation.ContinueWith(
+            baseTask => tcs.SetResult(baseTask.Result),
+            TaskContinuationOptions.OnlyOnRanToCompletion);
     }
+    //В решении не уверен, но передача значения по событию мне не понравилась)
 }

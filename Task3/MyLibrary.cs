@@ -1,7 +1,8 @@
 ﻿public class MyLibrary
 {
-    public Task<int> AddAsync(int a, int b)
+    public int Add(int a, int b)
     {
-        return Task.Run(() => a + b);
+        return a + b;
     }
+    //Ошибка в выделении потока для простейшей операции.
 }

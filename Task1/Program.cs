@@ -5,39 +5,38 @@
 
     public class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
-            SimpleExample();
-            ComplexExample();
+            var simpleTask = SimpleExample();
+            var complexTask = ComplexExample();
+
+            await Task.WhenAll(simpleTask, complexTask);
         }
 
-        public static void SimpleExample()
+        public static async Task SimpleExample()
         {
-            var task = Task.Run(() => Console.WriteLine("First!"));
-
-            Console.WriteLine("Second");
-
-            task.Wait();
+            await Task.Run(() =>
+            {
+                Console.WriteLine("First!");
+                Console.WriteLine("Second");
+            });
         }
 
-        public static void ComplexExample()
+        public static async Task ComplexExample()
         {
-            var task = Task
-                .Run(() => Task
-                    .Delay(2000)
-                    .ContinueWith(t => "In a task"));
+            var task1 = Task.Run(async () =>
+            {
+                await Task.Delay(2_000);
+                Console.WriteLine("In a task");
+            });
 
-            Task.Delay(4000).Wait();
-            Console.WriteLine("Outside of a task!");
+            var task2 = Task.Run(async () => 
+            {
+                await Task.Delay(4_000);
+                Console.WriteLine("Outside of a task!");
+            });
 
-            var completion = Task
-                .WhenAll(task)
-                .ContinueWith(async t =>
-                {
-                    Console.WriteLine((await t)[0]);
-                });
-
-            completion.Wait();
+            await Task.WhenAll(task1, task2);
         }
     }
 }
